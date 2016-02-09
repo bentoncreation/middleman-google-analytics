@@ -1,11 +1,15 @@
 <%
   create_options = []
   create_options << "'#{@options.tracking_id}'"
-  create_options << "'#{@options.domain_name || :auto}'"
+  create_options << "'auto'"
   create_options << "{'allowLinker': true}" if @options.allow_linker
 
   ga = []
   ga << "ga('create', #{create_options.join(', ')});"
+  if @options.allow_linker
+    ga << "ga('require', 'linker');"
+    ga << "ga('linker:autoLink', #{@options.domain_name.to_json});"
+  end
   ga << "ga('set', 'anonymizeIp', true);" if @options.anonymize_ip
   ga << "ga('send', 'pageview');"
 %>
